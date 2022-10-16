@@ -1,6 +1,7 @@
 import { fetchPrices } from "../services/datasource";
 import { getDataSource, getValue } from "../services/repository";
 import { relistCards, relistForFixedPrice } from "./reListUtil";
+import { getPercentDiff } from "./commonUtil";
 import {
   appendCheckBox,
   appendContractInfo,
@@ -36,6 +37,8 @@ export const appendCardPrice = async (listRows, section) => {
   let totalExternalPrice = 0;
   let totalBid = 0;
   let totalBin = 0;
+  let totalBoughtFor = 0;
+  let totalProfit = 0;
   const clubSquadIds = getValue("squadMemberIds") || new Set();
   for (const { __auction, data, __root } of listRows) {
     const auctionElement = $(__auction);
@@ -63,6 +66,15 @@ export const appendCardPrice = async (listRows, section) => {
     totalBid += bidPrice;
     totalBin += auctionData.buyNowPrice;
     totalExternalPrice += cardPrice || 0;
+
+    if(auctionData._tradeState === "inactive" && !rootElement.hasClass("has-action")){
+      const boughtFor = lastSalePrice;
+      totalBoughtFor += boughtFor;
+
+      const percentDiff = getPercentDiff(cardPrice * 0.95, boughtFor);
+      totalProfit += Math.round((percentDiff/100 * cardPrice));
+    }
+
     appendPrice(
       dataSource.toUpperCase(),
       auctionElement,
@@ -80,7 +92,7 @@ export const appendCardPrice = async (listRows, section) => {
     );
   }
   isFromPacks && appendPackPrice(totalExternalPrice);
-  return { totalBid, totalBin, totalExternalPrice };
+  return { totalBid, totalBin, totalExternalPrice ,totalBoughtFor,totalProfit};
 };
 
 const checkAndAppendBarginIndicator = (

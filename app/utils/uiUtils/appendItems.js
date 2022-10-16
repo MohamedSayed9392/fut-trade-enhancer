@@ -94,7 +94,7 @@ export const appendCheckBox = (rootElement, section, card) => {
 export const appendSectionTotalPrices = (
   rootElement,
   dataSource,
-  { totalBid, totalBin, totalExternalPrice }
+  { totalBid, totalBin, totalExternalPrice ,totalBoughtFor,totalProfit}
 ) => {
   rootElement.parent().find(`#${idSectionPrices}`).remove();
   const sectionPrices = $(`<div id=${idSectionPrices} class="ut-button-group">
@@ -105,6 +105,12 @@ export const appendSectionTotalPrices = (
     <span class="ut-store-reveal-modal-list-view--coins">${t(
       "binTotal"
     )} ${totalBin}</span>
+    <span class="ut-store-reveal-modal-list-view--coins">${t(
+      "TotalBoughtFor"
+    )} ${totalBoughtFor}</span>
+    <span class="ut-store-reveal-modal-list-view--coins">${t(
+      "TotalProfit"
+    )} ${totalProfit}</span>
     <span class="ut-store-reveal-modal-list-view--coins">${dataSource} ${totalExternalPrice} </span>
     </h3>
   </div>`);
