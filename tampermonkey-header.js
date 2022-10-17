@@ -21,8 +21,8 @@ module.exports = {
       "futhelpers.com",
     ],
     updateURL:
-      "https://github.com/ckalgos/fut-trade-enhancer/releases/latest/download/fut-trade-enhancer.user.js",
+      "https://github.com/MohamedSayed9392/fut-trade-enhancer/releases/latest/download/fut-trade-enhancer.user.js",
     downloadURL:
-      "https://github.com/ckalgos/fut-trade-enhancer/releases/latest/download/fut-trade-enhancer.user.js",
+      "https://github.com/MohamedSayed9392/fut-trade-enhancer/releases/latest/download/fut-trade-enhancer.user.js",
   },
 };
