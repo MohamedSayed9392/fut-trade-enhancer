@@ -21,6 +21,7 @@ import {
   idSBCPlayersToBuy,
   idSBCFUTBINSolution,
   idSBCMarketSolution,
+  isMarketAlertApp,
 } from "../app.constants";
 import { showPopUp } from "./popup-override";
 import { getDataSource, getValue, setValue } from "../services/repository";
@@ -51,11 +52,7 @@ export const sbcViewOverride = () => {
         const players = $(`#${idSBCMarketSolution} option`)
           .filter(":selected")
           .val();
-        const squadPlayersLookup = await getSquadPlayerLookup();
-        positionPlayers(
-          players.split(",").map((id) => parseInt(id)),
-          squadPlayersLookup
-        );
+        fillMarketAlertSbc(players.split(",").map((id) => parseInt(id)));
       },
     },
     `#${idSBCMarketSolution}`
@@ -115,6 +112,11 @@ export const sbcViewOverride = () => {
   };
 };
 
+const fillMarketAlertSbc = async (players) => {
+  const squadPlayersLookup = await getSquadPlayerLookup();
+  positionPlayers(players, squadPlayersLookup);
+};
+
 const fetchAndAppendCommunitySbcs = async (challengeId) => {
   const squads = await getAllSBCSForChallenge(challengeId);
   $(`#${idSBCFUTBINSolution}`).remove();
@@ -134,11 +136,11 @@ const fetchAndAppendCommunitySbcs = async (challengeId) => {
 };
 
 const fetchAndAppendMarketAlertSbcs = async (challengeId) => {
-  if (!isPhone()) {
+  if (!isMarketAlertApp) {
     return;
   }
   const squadPlayers = await getSquadPlayerIds();
-  const { sbcs } = await fetchSbcs(challengeId, squadPlayers);
+  const { sbcs } = await fetchSbcs(challengeId, Array.from(squadPlayers));
 
   $(`#${idSBCMarketSolution}`).remove();
 

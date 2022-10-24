@@ -9,6 +9,7 @@ import {
 } from "../utils/commonUtil";
 import { sendUINotification } from "../utils/notificationUtil";
 import { showPopUp } from "./popup-override";
+import { isMarketAlertApp } from "../app.constants";
 
 export const sbcHomeOverride = () => {
   const populateTiles = UTSBCHubView.prototype.populateTiles;
@@ -31,19 +32,21 @@ export const sbcHomeOverride = () => {
       challange.name === services.Localization.localize("sbc.categories.all")
     ) {
       getSquadPlayerIds();
-      const solveSbcTile = new UTSBCSetTileView();
-      solveSbcTile.init();
-      solveSbcTile.title = t("findSolvableSbcs");
-      solveSbcTile.__tileContent.textContent = t("scanClubSbc");
-      solveSbcTile._progressBar.setProgress(100);
-      solveSbcTile.addTarget(
-        this,
-        () => findSolvableSbcsPopUp(set),
-        EventType.TAP
-      );
-      this.sbcSetTiles.unshift(solveSbcTile);
-      this.__sbcSetTiles.prepend(solveSbcTile.getRootElement());
-      solveSbcTile.render();
+      if (false) {
+        const solveSbcTile = new UTSBCSetTileView();
+        solveSbcTile.init();
+        solveSbcTile.title = t("findSolvableSbcs");
+        solveSbcTile.__tileContent.textContent = t("scanClubSbc");
+        solveSbcTile._progressBar.setProgress(100);
+        solveSbcTile.addTarget(
+          this,
+          () => findSolvableSbcsPopUp(set),
+          EventType.TAP
+        );
+        this.sbcSetTiles.unshift(solveSbcTile);
+        this.__sbcSetTiles.prepend(solveSbcTile.getRootElement());
+        solveSbcTile.render();
+      }
     }
     return result;
   };
@@ -55,9 +58,9 @@ export const sbcHomeOverride = () => {
         { labelEnum: enums.UIDialogOptions.CANCEL },
       ],
       t("findSolvableSbcs"),
-      !isPhone() ? t("solvableUnAvailable") : t("solveInfo"),
+      !isMarketAlertApp ? t("solvableUnAvailable") : t("solveInfo"),
       (text) => {
-        text === 2 && isPhone() && findSolvableSbcs(set);
+        text === 2 && isMarketAlertApp && findSolvableSbcs(set);
       }
     );
   };
@@ -70,7 +73,7 @@ export const sbcHomeOverride = () => {
       sendUINotification(t("gatherSquadInfo"));
       const squadIds = await getSquadPlayerIds();
       sendUINotification(t("fetchingSolvableSbcs"));
-      const { sbcs } = await fetchSolvableSbcs(squadIds);
+      const { sbcs } = await fetchSolvableSbcs(Array.from(squadIds));
       const squadLookUp = await getSquadPlayerLookup();
       const sbcResult = [];
       for (const sbc of sbcs.sort((a, b) => b.order - a.order)) {
