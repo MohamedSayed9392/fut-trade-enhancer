@@ -2,6 +2,11 @@ import { fetchPrices } from "../services/datasource";
 import { getDataSource, getValue } from "../services/repository";
 import { relistCards, relistForFixedPrice } from "./reListUtil";
 import { getPercentDiff } from "./commonUtil";
+import {
+  moveCardsToClub,
+  relistCards,
+  relistForFixedPrice,
+} from "./reListUtil";
 import { showMoveToTransferListPopup } from "./transferListUtil";
 import {
   appendCheckBox,
@@ -14,7 +19,10 @@ import {
   appendSectionTotalPrices,
   appendSquadTotal,
 } from "./uiUtils/appendItems";
-import { generateSendToTransferList } from "./uiUtils/generateElements";
+import {
+  generateSendToClub,
+  generateSendToTransferList,
+} from "./uiUtils/generateElements";
 import { moveUnassignedToTransferList } from "./unassignedutil";
 
 export const appendCardPrice = async (listRows, section) => {
@@ -153,8 +161,8 @@ export const appendSectionPrices = async (sectionData) => {
         ).__root
       );
     }
-    sectionData.isRelistSupported &&
-      appendRelistExternal(
+    if (sectionData.isRelistSupported) {
+      const wrapperElement = appendRelistExternal(
         sectionData.sectionHeader,
         sectionData.headerElement,
         dataSource.toUpperCase(),
@@ -165,6 +173,21 @@ export const appendSectionPrices = async (sectionData) => {
           relistForFixedPrice(sectionData.sectionHeader);
         }
       );
+      if (
+        [
+          services.Localization.localize("tradepile.button.relistall"),
+          services.Localization.localize("infopanel.label.addplayer"),
+        ].indexOf(sectionData.sectionHeader) >= 0
+      ) {
+        wrapperElement &&
+          wrapperElement.append(
+            generateSendToClub(
+              () => moveCardsToClub(sectionData.sectionHeader),
+              "relist"
+            ).__root
+          );
+      }
+    }
     appendCardPrice(sectionData.listRows, sectionData.sectionHeader).then(
       (prices) => {
         setTimeout(() => {
