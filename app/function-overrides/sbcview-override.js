@@ -22,16 +22,35 @@ import {
   idSBCFUTBINSolution,
   idSBCMarketSolution,
   isMarketAlertApp,
+  idGenerateSBCSolution,
 } from "../app.constants";
 import { showPopUp } from "./popup-override";
 import { getDataSource, getValue, setValue } from "../services/repository";
 import { getSellBidPrice, roundOffPrice } from "../utils/priceUtil";
 import { t } from "../services/translate";
 import { fetchPrices } from "../services/datasource";
-import { fetchSbcs } from "../services/datasource/marketAlert";
+import { fetchSbcs, fetchUniqueSbc } from "../services/datasource/marketAlert";
 
 export const sbcViewOverride = () => {
   const squladDetailPanelView = UTSBCSquadDetailPanelView.prototype.render;
+
+  const squadActionInit = UTSquadActionsView.prototype.init;
+  UTSquadActionsView.prototype.init = function (...args) {
+    const response = squadActionInit.call(this, ...args);
+    const showBuy = this.eventDelegates[0]._inSquadContext;
+    showBuy &&
+      $(
+        generateButton(
+          idBuySBCPlayers,
+          t("buyMissingPlayers"),
+          () => {
+            buyPlayersPopUp();
+          },
+          "call-to-action"
+        )
+      ).insertAfter($(this._deleteBtn.__root));
+    return response;
+  };
 
   $(document).on(
     {
@@ -49,10 +68,24 @@ export const sbcViewOverride = () => {
   $(document).on(
     {
       change: async function () {
+        if (!isMarketAlertApp) {
+          return sendUINotification(
+            t("solvableUnAvailable"),
+            UINotificationType.NEGATIVE
+          );
+        }
+        const accessLevel = getValue("userAccess");
+        if (!accessLevel || accessLevel === "tradeEnhancer") {
+          return sendUINotification(
+            t("levelError"),
+            UINotificationType.NEGATIVE
+          );
+        }
         const players = $(`#${idSBCMarketSolution} option`)
           .filter(":selected")
           .val();
-        fillMarketAlertSbc(players.split(",").map((id) => parseInt(id)));
+        if (players)
+          fillMarketAlertSbc(players.split(",").map((id) => parseInt(id)));
       },
     },
     `#${idSBCMarketSolution}`
@@ -112,6 +145,29 @@ export const sbcViewOverride = () => {
   };
 };
 
+const generateUniqueSolution = async () => {
+  showPopUp(
+    [
+      { labelEnum: enums.UIDialogOptions.OK },
+      { labelEnum: enums.UIDialogOptions.CANCEL },
+    ],
+    t("generateSolution"),
+    t("generateSolutionInfo"),
+    (text) => {
+      text === 2 &&
+        (async () => {
+          const challengeId = getValue("squadId");
+          const {
+            sbc: { players },
+          } = await fetchUniqueSbc(challengeId);
+          if (players && players.length) {
+            await fillMarketAlertSbc(players);
+          }
+        })();
+    }
+  );
+};
+
 const fillMarketAlertSbc = async (players) => {
   const squadPlayersLookup = await getSquadPlayerLookup();
   positionPlayers(players, squadPlayersLookup);
@@ -136,13 +192,39 @@ const fetchAndAppendCommunitySbcs = async (challengeId) => {
 };
 
 const fetchAndAppendMarketAlertSbcs = async (challengeId) => {
-  if (!isMarketAlertApp) {
-    return;
+  const accessLevel = getValue("userAccess");
+  if (!isMarketAlertApp || !accessLevel || accessLevel === "tradeEnhancer") {
+    $(`#${idSBCMarketSolution}`).remove();
+    await wait(1);
+    return $(".sbcSolutions").append(
+      `<select id="${idSBCMarketSolution}" class="sbc-players-list" style="border : 1px solid; width: 90%;">
+        <option selected="true" disabled value='-1'>${t(
+          "marketSBCSolutions"
+        )}</option>
+        ${Array(getRandNum(10, 20))
+          .fill("")
+          .map(() => {
+            return `<option class="currency-coins">Available Players(???)</option>`;
+          })}
+     </select>`
+    );
   }
   const squadPlayers = await getSquadPlayerIds();
   const { sbcs } = await fetchSbcs(challengeId, Array.from(squadPlayers));
 
   $(`#${idSBCMarketSolution}`).remove();
+
+  const isFutBin = getDataSource() === "futbin";
+  if (isFutBin) {
+    const solutionPlayers = sbcs.reduce((acc, { players }) => {
+      players.forEach((curr) => {
+        !squadPlayers.has(curr) &&
+          acc.set(curr, { definitionId: curr, isPlayer: () => true });
+      });
+      return acc;
+    }, new Map());
+    await fetchPrices(solutionPlayers.values());
+  }
 
   $(".sbcSolutions").append(
     `<select id="${idSBCMarketSolution}" class="sbc-players-list" style="border : 1px solid; width: 90%;">
@@ -150,7 +232,22 @@ const fetchAndAppendMarketAlertSbcs = async (challengeId) => {
         "marketSBCSolutions"
       )}</option>
       ${sbcs.map(({ players, availablePlayers }) => {
-        return `<option class="currency-coins" value='${players}'>Available Players(${availablePlayers})</option>`;
+        let label = "";
+        if (isFutBin) {
+          const total = players.reduce((acc, curr) => {
+            if (!squadPlayers.has(curr)) {
+              const futBinPrice = getValue(`${curr}_futbin_price`);
+              if (futBinPrice) {
+                acc += futBinPrice.price;
+              }
+            }
+            return acc;
+          }, 0);
+          label = `(${t("price")} ${total})`;
+        }
+        return `<option class="currency-coins" value='${players}'>Available Players(${availablePlayers})${
+          label ? label : ""
+        }</option>`;
       })}
    </select>`
   );

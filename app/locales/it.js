@@ -106,8 +106,6 @@ export const itLocales = {
   sendToTransferListInfo:
     "Il bot proverà a inviare fino a elementi all'elenco di trasferimento",
   activeSquadMemberErr: "Impossibile ottenere giocatori di squadra attivi",
-  increaseActiveList: "Bypassa il limite di inserzione attiva",
-  increaseActiveListInfo: "Aumenta il numero di annunci attivi a 100",
   disablePackAnimation: "Disabilita l'animazione del pacchetto",
   disablePackAnimationInfo:
     "Disabilita l'animazione durante l'apertura del pacchetto",
@@ -120,7 +118,7 @@ export const itLocales = {
   scanClubSbc:
     "Scansiona i giocatori del tuo club per trovare sbcs risolvibili",
   solvableUnAvailable:
-    "La funzionalità è disponibile solo nell'app Market Alert",
+    "Utilizza l'app Market Alert per visualizzare il risultato della scansione",
   solveInfo:
     "Il bot eseguirà la scansione del tuo club per trovare sbcs che possono essere completati",
   gatherChallengeInfo: "Raccogli informazioni sulle sfide Challenge",
@@ -134,4 +132,11 @@ export const itLocales = {
   showOnlyBargainInfo: "Mostra solo carte inferiori a FUTBIN nelle ricerche",
   selectAll: "Seleziona tutto",
   deSelectAll: "Deseleziona tutto",
+  showAlternatePostion: "Mostra posizioni alternative",
+  showAlternatePostionInfo: "Mostrerà informazioni sulle posizioni alternative",
+  levelError:
+    "Questa funzione è disponibile solo per gli utenti di livello 'Enhancer Gold'. Vai alla scheda 'Store' se vuoi aggiornare",
+  generateSolution: "Genera soluzione",
+  generateSolutionInfo:
+    "Sulla base dei requisiti SBC forniti, il bot proverà a generare una soluzione unica non utilizzata prima",
 };

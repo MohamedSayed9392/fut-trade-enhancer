@@ -103,8 +103,6 @@ export const nlLocales = {
   sendToTransferListInfo:
     "Bot zal proberen om maximaal items naar de overdrachtslijst te sturen",
   activeSquadMemberErr: "Kan geen actieve squadronspelers krijgen",
-  increaseActiveList: "Actieve lijstlimiet overslaan",
-  increaseActiveListInfo: "Verhoogt het aantal actieve vermeldingen tot 100",
   disablePackAnimation: "Pakanimatie uitschakelen",
   disablePackAnimationInfo:
     "Schakel animatie uit tijdens het openen van het pakket",
@@ -116,7 +114,8 @@ export const nlLocales = {
   autoSelectLowest: "Automatisch laagste kaart selecteren",
   findSolvableSbcs: "Find Solvable Sbcs",
   scanClubSbc: "Scan je clubspelers om oplosbare sbc's te vinden",
-  solvableUnAvailable: "Functie is alleen beschikbaar in de Market Alert-app",
+  solvableUnAvailable:
+    "Gebruik de Market Alert-app om het scanresultaat te bekijken",
   solveInfo:
     "De bot scant uw club om sbc's te vinden die kunnen worden voltooid",
   gatherChallengeInfo: "Verzamel informatie over Challenge Challenges",
@@ -130,4 +129,12 @@ export const nlLocales = {
     "Toon alleen kaarten kleiner dan FUTBIN in zoekopdrachten",
   selectAll: "Alles selecteren",
   deSelectAll: "Deselecteer alles",
+  showAlternatePostion: "Toon alternatieve posities",
+  showAlternatePostionInfo:
+    "Zal informatie over alternatieve posities weergeven",
+  levelError:
+    "Deze functie is alleen beschikbaar voor gebruikers van 'Enhancer Gold'-niveau. Ga naar het tabblad 'Store' als u wilt upgraden",
+  generateSolution: "Genereer Oplossing",
+  generateSolutionInfo:
+    "Op basis van de gegeven SBC-vereisten zal de bot proberen een unieke oplossing te genereren die nog niet eerder is gebruikt",
 };
