@@ -254,12 +254,13 @@ const fetchAndAppendMarketAlertSbcs = async (challengeId) => {
 };
 
 const getControllerInstance = () => {
+  //return getCurrentViewController().getCurrentController()._leftController;
+  //TODO TO BE IMPLMENTED
   if (isPhone()) {
     const childViews = getCurrentViewController()._childViewControllers;
 
     return childViews[childViews.length - 2];
   }
-
   return getCurrentViewController().getCurrentController()._leftController;
 };
 

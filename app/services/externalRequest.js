@@ -34,6 +34,9 @@ export const initListeners = () => {
 };
 
 export const sendExternalRequest = async (options) => {
+  sendWebRequest(options);
+  return;
+  //TODO TO BE IMPLMENTED
   if (isMarketAlertApp || isPhone()) {
     sendPhoneRequest(options);
   } else {
