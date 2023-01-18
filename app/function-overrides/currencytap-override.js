@@ -26,38 +26,4 @@ export const currencyTapOverride = () => {
     }
     return res;
   };
-
-  UTCurrencyNavigationBarView.prototype._generate = function () {
-    const loggedInUser = getValue("loggedInUser");
-    const res = currentBarGenerate.call(this);
-    if (isMarketAlertApp) {
-      return res;
-    }
-    this.__loginWrapper = document.createElement("div");
-    this.__loginWrapper.classList.add("view-navbar-clubinfo");
-    this.__loginWrapper.style.marginRight = "10px";
-    this.__loginWrapperBtn = document.createElement("button");
-    this.__loginWrapperBtn.innerHTML = loggedInUser
-      ? "Logout"
-      : "Login To AB Server";
-    this.__loginWrapperBtn.classList.add(
-      "btn-standard",
-      "section-header-btn",
-      "call-to-action",
-      "btn-sign"
-    );
-    if (loggedInUser) {
-      this.__loginWrapperBtn.style.backgroundColor = "#ff3434";
-      this.__loginWrapperBtn.style.color = "#f6f6fe";
-    }
-    this.__loginWrapperBtn.onclick = function () {
-      loggedInUser ? Auth.signOut() : Auth.federatedSignIn();
-    };
-    this.__loginWrapper.appendChild(this.__loginWrapperBtn);
-    this.__currencies.parentNode.insertBefore(
-      this.__loginWrapper,
-      this.__currencies
-    );
-    return res;
-  };
-};
+}
