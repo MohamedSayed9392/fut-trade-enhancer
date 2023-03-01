@@ -3,7 +3,7 @@ import { getSquadPlayerIds, getSquadPlayerLookup } from "../services/club";
 import { getAllChallanges } from "../services/datasource/futbin";
 import { t } from "../services/translate";
 import {
-  getCurrentViewController,
+  getNavigationController,
   hideLoader,
   showLoader,
   wait,
@@ -31,7 +31,8 @@ export const sbcHomeOverride = () => {
   UTSBCHubView.prototype.populateTiles = function (set, challange) {
     const result = populateTiles.call(this, set, challange);
     if (
-      challange.name === services.Localization.localize("sbc.categories.all")
+      challange.name === services.Localization.localize("sbc.categories.all") &&
+      false
     ) {
       getSquadPlayerIds();
       const solveSbcTile = new UTSBCSetTileView();
@@ -115,9 +116,7 @@ export const sbcHomeOverride = () => {
           playersAvailable,
         });
       }
-      const currentNavigationController = getCurrentViewController()
-        .getCurrentController()
-        .getNavigationController();
+      const currentNavigationController = getNavigationController();
 
       const challengesViewController = new UTSBCChallengesViewController();
       challengesViewController.initWithSBCSet(

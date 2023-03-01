@@ -4,7 +4,6 @@ import { initListeners } from "./services/externalRequest";
 import { setValue } from "./services/repository";
 import { getPlayers, getSettings, initDatabase } from "./utils/dbUtil";
 import { setMaxUnassignedCount } from "./utils/pileUtil";
-
 const initScript = function () {
   let isAllLoaded = false;
   if (services.Localization) {
