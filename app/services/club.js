@@ -11,10 +11,10 @@ import { t } from "../services/translate";
 import { sendUINotification } from "../utils/notificationUtil";
 import { fetchPrices } from "./datasource";
 
-export const getSquadPlayerIds = (level, sort, rarity) => {
+export const getSquadPlayerIds = () => {
   return new Promise((resolve) => {
     const squadPlayerIds = new Set();
-    getAllClubPlayers(true, null, level, sort, rarity).then((squadMembers) => {
+    getAllClubPlayers(true, null).then(([squadMembers]) => {
       squadMembers.forEach((member) => {
         squadPlayerIds.add(member.definitionId);
       });
@@ -23,10 +23,43 @@ export const getSquadPlayerIds = (level, sort, rarity) => {
   });
 };
 
+export const getSquadPlayersForSbc = ({ level, sort, rarity }) => {
+  return new Promise((resolve) => {
+    const squadPlayers = [];
+    getAllClubPlayers(true, null, { level, sort, rarity }).then(
+      ([squadMembers, isFromCache]) => {
+        squadMembers.forEach((member) => {
+          squadPlayers.push({
+            definitionId: member.definitionId,
+            databaseId: member.databaseId,
+            rating: member.rating,
+            quality: member.isBronzeRating()
+              ? 1
+              : member.isSilverRating()
+              ? 2
+              : 3,
+            rareflag: member.rareflag,
+            nationId: member.nationId,
+            teamId: member.teamId,
+            preferredPosition: member.preferredPosition,
+            leagueId: member.leagueId,
+            isSpecial: member.isSpecial(),
+            groups: member.groups,
+          });
+        });
+        resolve({
+          squadPlayers: squadPlayers.sort((a, b) => a.rating - b.rating),
+          isFromCache,
+        });
+      }
+    );
+  });
+};
+
 export const getSquadPlayerLookup = () => {
   return new Promise((resolve, reject) => {
     const squadPlayersLookup = new Map();
-    getAllClubPlayers(true).then((squadMembers) => {
+    getAllClubPlayers(true).then(([squadMembers]) => {
       squadMembers.forEach((member) => {
         squadPlayersLookup.set(member.definitionId, member);
       });
@@ -64,9 +97,7 @@ export const getNonActiveSquadPlayers = async function (isTradable) {
 export const getAllClubPlayers = function (
   filterLoaned,
   playerId,
-  level,
-  sort,
-  rarity
+  { level, sort, rarity } = {}
 ) {
   return new Promise((resolve) => {
     services.Club.clubDao.resetStatsCache();
@@ -101,7 +132,7 @@ export const getAllClubPlayers = function (
             await wait(1);
             getAllSquadMembers();
           } else {
-            resolve(gatheredSquad);
+            resolve([gatheredSquad, response.status === 304]);
           }
         }
       );
@@ -130,7 +161,7 @@ const getActiveSquadIds = (searchModel) => {
 
 export const downloadClub = async () => {
   showLoader();
-  let squadMembers = await getAllClubPlayers();
+  let [squadMembers] = await getAllClubPlayers();
   squadMembers = squadMembers.sort((a, b) => b.rating - a.rating);
 
   await fetchPrices(squadMembers);
