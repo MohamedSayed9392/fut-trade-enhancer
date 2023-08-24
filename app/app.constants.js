@@ -53,5 +53,6 @@ export const idShowAlternatePosition = "elem_" + generateId(15);
 export const idOnlyBargain = "elem_" + generateId(15);
 export const idGenerateSBCSolution = "elem_" + generateId(15);
 export const idSquadBuildPlayerRating = "elem_" + generateId(15);
+export const idSquadBuildPlayerCount = "elem_" + generateId(15);
 export const idSquadBuildIgnorePosition = "elem_" + generateId(15);
 export const idSquadBuildFromUnassigned = "elem_" + generateId(15);
