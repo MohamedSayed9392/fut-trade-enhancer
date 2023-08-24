@@ -29,8 +29,7 @@ export const squadBuilderOverride = () => {
           "(Filter players by rating range)",
           enhancerSetting.idSquadBuildPlayerRating,
           "text",
-          "sb-setting",
-          "\\d+-\\d+$"
+          "sb-setting"
         )}
         ${generateTextInput(
           "Count",
@@ -119,7 +118,7 @@ export const squadBuilderOverride = () => {
       });
     }
 
-    if (enhancerSetting.idSquadBuildPlayerCount) {
+    if (enhancerSetting.idSquadBuildPlayerCount != null) {
       var count = parseInt(enhancerSetting.idSquadBuildPlayerCount);
       if (response.response.items.length > count) {
         removeItemsAtIndexGreaterThan(
