@@ -120,7 +120,7 @@ export const squadBuilderOverride = () => {
 
     if (enhancerSetting.idSquadBuildPlayerCount != null) {
       var count = parseInt(enhancerSetting.idSquadBuildPlayerCount);
-      if (response.response.items.length > count) {
+      if (count != 0 && response.response.items.length > count) {
         removeItemsAtIndexGreaterThan(
           response.response.items.length,
           count - 1
