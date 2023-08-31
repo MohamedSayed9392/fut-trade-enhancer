@@ -91,12 +91,14 @@ export const squadBuilderOverride = () => {
       return unassignedItem.guidAssetId;
     });
 
+    console.log("response.response.items.length 0 -> " + response.response.items.length);
     if (enhancerSetting.idSquadBuildFromUnassigned) {
       response.response.items = response.response.items.filter(
         (x) => !!unassignedItemsIds.includes(x.guidAssetId)
       );
     }
 
+    console.log("response.response.items.length 1 -> " + response.response.items.length);
     const ratingVal = getRangeValue(
       enhancerSetting.idSquadBuildPlayerRating || ""
     );
@@ -109,6 +111,7 @@ export const squadBuilderOverride = () => {
       });
     }
 
+    console.log("response.response.items.length 2 -> " + response.response.items.length);
     if (ratingVal.length === 1) {
       response.response.items = response.response.items.filter((x) => {
         if (x.rating != ratingVal[0]) {
@@ -118,13 +121,14 @@ export const squadBuilderOverride = () => {
       });
     }
 
+    console.log("enhancerSetting.idSquadBuildPlayerCount -> "+enhancerSetting.idSquadBuildPlayerCount);
     if (enhancerSetting.idSquadBuildPlayerCount != null) {
       var count = parseInt(enhancerSetting.idSquadBuildPlayerCount);
+      console.log("count -> " +count);
+      console.log("response.response.items.length 3 -> " + response.response.items.length);
       if (count != 0 && response.response.items.length > count) {
-        removeItemsAtIndexGreaterThan(
-          response.response.items.length,
-          count - 1
-        );
+        response.response.items.length = count + 1;
+        console.log("response.response.items.length -> " + response.response.items.length);
       }
     }
 
