@@ -2,12 +2,12 @@ module.exports = {
   headers: {
     name: "FUT Trade Enhancer",
     namespace: "http://tampermonkey.net/",
-    version: "1.6.9",
+    version: "2.0.0",
     description: "FUT Trade Enhancer",
     author: "CK Algos",
     match: [
-      "https://www.ea.com/*/fifa/ultimate-team/web-app/*",
-      "https://www.ea.com/fifa/ultimate-team/web-app/*",
+      "https://www.ea.com/*/ea-sports-fc/ultimate-team/web-app/*",
+      "https://www.ea.com/ea-sports-fc/ultimate-team/web-app/*",
     ],
     require: [
       "https://code.jquery.com/jquery-3.6.1.min.js",
