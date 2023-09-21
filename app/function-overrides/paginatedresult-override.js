@@ -2,7 +2,7 @@ import { appendCardPrice, appendSectionPrices } from "../utils/priceAppendUtil";
 
 export const paginatedResultOverride = () => {
   const paginatedRenderList = UTPaginatedItemListView.prototype._renderItems;
-  const setSectionHeader = UTSectionedItemListView.prototype.setHeader;
+  const setSectionHeader = UTSectionedItemListView.prototype.setActionHeader;
 
   const relistSupportedSections = new Set();
 
@@ -19,7 +19,7 @@ export const paginatedResultOverride = () => {
     return result;
   };
 
-  UTSectionedItemListView.prototype.setHeader = function (
+  UTSectionedItemListView.prototype.setActionHeader = function (
     section,
     text,
     ...args

@@ -35,7 +35,7 @@ export const initOverrides = () => {
   transferSearchOverride();
   playerViewPanelOverride();
   sbcViewOverride();
-  futHomeOverride();
+  //futHomeOverride();
   packItemOverride();
   popupOverride();
   binPopUpOverride();
