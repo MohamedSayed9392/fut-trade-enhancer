@@ -126,7 +126,7 @@ export const sbcViewOverride = () => {
     const { _squad } = getControllerInstance();
     setValue("squadId", sbcId);
     fetchAndAppendCommunitySbcs(sbcId);
-    fetchAndAppendMarketAlertSbcs(sbcId);
+    //fetchAndAppendMarketAlertSbcs(sbcId);
     setTimeout(async () => {
       if (!$(".futBinFill").length) {
         $(".challenge-content").append(

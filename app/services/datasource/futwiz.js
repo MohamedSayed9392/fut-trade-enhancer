@@ -39,7 +39,7 @@ const getPlayerPrices = async (player, result) => {
       return;
     }
     const futWizResponse = await sendRequest(
-      `https://www.futwiz.com/en/app/sold23/${filteredPlayer[0].lineid}/console`,
+      `https://www.futwiz.com/en/app/sold24/${filteredPlayer[0].lineid}/console`,
       "GET",
       `${player.definitionId}_fetchFutWizPlayerPrices`
     );
@@ -74,7 +74,7 @@ const getPlayerUrl = async (player) => {
   if (!filteredPlayer) {
     return;
   }
-  const url = `https://www.futwiz.com/en/fifa23/player/${filteredPlayer[0].urlname}/${filteredPlayer[0].lineid}`;
+  const url = `https://www.futwiz.com/en/fc24/player/${filteredPlayer[0].urlname}/${filteredPlayer[0].lineid}`;
   setValue(`${player.definitionId}_futwiz_url`, url);
   return url;
 };
@@ -87,7 +87,7 @@ const getMatchingPlayer = (item) => {
         : item._staticData.name
     );
     sendExternalRequest({
-      url: `https://www.futwiz.com/en/searches/player23/${playerName}`,
+      url: `https://www.futwiz.com/en/searches/player24/${playerName}`,
       method: "GET",
       identifier: `${item.definitionId}_getFutWizPlayerUrl`,
       onload: (res) => {
