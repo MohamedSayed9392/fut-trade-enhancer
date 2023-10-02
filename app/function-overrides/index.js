@@ -26,6 +26,7 @@ import { sbcHomeOverride } from "./sbchome-override";
 import { transferResultOverride } from "./transferresult-override";
 import { playerItemRenderOverride } from "./playerItemRender-override";
 import { squadBuilderOverride } from "./squadbuilder-override";
+import { unassignedListOverride } from "./unassigned-list-override";
 
 export const initOverrides = () => {
   xmlRequestOverride();
@@ -55,6 +56,7 @@ export const initOverrides = () => {
   transferResultOverride();
   playerItemRenderOverride();
   squadBuilderOverride();
+  unassignedListOverride();
 
   overrideStyle();
 };

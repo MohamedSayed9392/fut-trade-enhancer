@@ -59,6 +59,7 @@ export const appendCardPrice = async (listRows, section) => {
       contract,
       _auction: auctionData,
       lastSalePrice,
+      discardValue
     } = data;
     const cardPrice = prices.get(`${definitionId}_${dataSource}_price`);
     appendContractInfo(rootElement, contract);
@@ -78,12 +79,12 @@ export const appendCardPrice = async (listRows, section) => {
     totalBin += auctionData.buyNowPrice;
     totalExternalPrice += cardPrice || 0;
 
-    if(auctionData._tradeState === "inactive" && !rootElement.hasClass("has-action")){
+    if(auctionData._tradeState === "inactive" && !rootElement.hasClass("has-action") && discardValue != 0){
       const boughtFor = lastSalePrice;
       totalBoughtFor += boughtFor;
 
       const percentDiff = getPercentDiff(cardPrice * 0.95, boughtFor);
-      totalProfit += Math.round((percentDiff/100 * cardPrice));
+      totalProfit += Math.round(((percentDiff < 100 ? percentDiff/100 : 0.95) * cardPrice));
     }
 
     appendPrice(
@@ -153,7 +154,7 @@ export const appendSectionPrices = async (sectionData) => {
   const dataSource = getDataSource();
   if (sectionData.listRows.length) {
     const isUnassigned =
-      services.Localization.localize("infopanel.label.storeAllInClub") ===
+      "Unassigned" ===
       sectionData.sectionHeader;
     if (isUnassigned) {
       sectionData.headerElement.append(
