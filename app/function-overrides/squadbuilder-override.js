@@ -5,7 +5,10 @@ import {
   idSquadBuildFromUnassigned,
   idSquadBuildPlayerCount,
 } from "../app.constants";
-import { createElementFromHTML, getRangeValue } from "../utils/commonUtil";
+import {
+  getSquadPlayerLookup
+} from "../services/club";
+import { createElementFromHTML, getRangeValue, hideLoader, showLoader, } from "../utils/commonUtil";
 import { generateToggleInput } from "../utils/uiUtils/generateToggleInput";
 import { getValue } from "../services/repository";
 
@@ -84,18 +87,30 @@ export const squadBuilderOverride = () => {
     observer,
     response
   ) {
+    showLoader();
+
     const enhancerSetting = getValue("EnhancerSettings") || {};
 
-    let unassignedItems = await getUnassignedItems();
-    var unassignedItemsIds = unassignedItems.map(function (unassignedItem) {
-      return unassignedItem.guidAssetId;
-    });
-
-    console.log("response.response.items.length 0 -> " + response.response.items.length);
     if (enhancerSetting.idSquadBuildFromUnassigned) {
-      response.response.items = response.response.items.filter(
-        (x) => !!unassignedItemsIds.includes(x.guidAssetId)
-      );
+      let unassignedItems = await getUnassignedItems();
+      var unassignedItemsIds = unassignedItems.map(function (unassignedItem) {
+         return unassignedItem.definitionId;
+      });
+
+      console.log("response.response.items.length 0 -> " + response.response.items.length);
+   
+      const squadPlayersLookup = await getSquadPlayerLookup();
+
+      const squadPlayers = unassignedItemsIds.map((currItem) => {
+        if (!currItem) {
+          return null;
+        }
+        const key = currItem;
+        const clubPlayerInfo = squadPlayersLookup.get(key);
+        return clubPlayerInfo;
+      });
+
+      response.response.items = squadPlayers;
     }
 
     console.log("response.response.items.length 1 -> " + response.response.items.length);
@@ -132,6 +147,8 @@ export const squadBuilderOverride = () => {
       }
     }
 
+    hideLoader();
+
     onSearchComplete.call(this, observer, response);
   };
 
@@ -145,11 +162,4 @@ export const squadBuilderOverride = () => {
       );
     });
   };
-
-  function removeItemsAtIndexGreaterThan(arr, index) {
-    // Use a reverse loop to avoid issues with shifting indices when removing items
-    for (let i = arr.length - 1; i > index; i--) {
-      arr.splice(i, 1); // Remove the item at index i
-    }
-  }
 };

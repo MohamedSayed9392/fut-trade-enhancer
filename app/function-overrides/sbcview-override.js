@@ -477,7 +477,9 @@ const buyMissingPlayers = async (conceptPlayers, futBinPercent) => {
   sendUINotification(t("tryingToBuySbc"));
   await fetchPrices(conceptPlayers);
   const dataSource = getDataSource();
-  for (const player of conceptPlayers) {
+  for (let i = 0; i < conceptPlayers.length; i++) {
+    const player = conceptPlayers[i];
+    
     const existingValue = getValue(
       `${player.definitionId}_${dataSource}_price`
     );
@@ -487,7 +489,7 @@ const buyMissingPlayers = async (conceptPlayers, futBinPercent) => {
         (parsedPrice * futBinPercent) / 100,
         200
       );
-      await buyPlayer(player, calculatedPrice);
+      await buyPlayer(i+1 , conceptPlayers.length, player, calculatedPrice);
       await wait(getRandWaitTime("3-5"));
     } else {
       sendUINotification(
@@ -498,11 +500,12 @@ const buyMissingPlayers = async (conceptPlayers, futBinPercent) => {
       );
     }
   }
+
   sendUINotification(t("buyCompleted"));
   hideLoader();
 };
 
-const buyPlayer = (player, buyPrice) => {
+const buyPlayer = (index, total,player, buyPrice) => {
   let numberOfAttempts = 3;
   let buySuccess = false;
   const searchCriteria = new UTSearchCriteriaDTO();
@@ -531,7 +534,7 @@ const buyPlayer = (player, buyPrice) => {
             sendPinEvents("Transfer Market Results - List View");
             if (!response.data.items.length) {
               sendUINotification(
-                `${t("noCardFound")} ${player._staticData.name}`,
+                `${index}/${total} ${t("noCardFound")} ${player._staticData.name}`,
                 UINotificationType.NEGATIVE
               );
               return;
@@ -546,7 +549,7 @@ const buyPlayer = (player, buyPrice) => {
             ).observe(this, async function (sender, data) {
               if (data.success) {
                 sendUINotification(
-                  `${t("buySuccess")} ${player._staticData.name}`
+                  `${index}/${total} ${t("buySuccess")} ${player._staticData.name}`
                 );
                 numberOfAttempts = 0;
                 buySuccess = true;
@@ -555,7 +558,7 @@ const buyPlayer = (player, buyPrice) => {
                 let status =
                   ((data.error && data.error.code) || data.status) + "";
                 sendUINotification(
-                  `${t("buyFailed")} ${player._staticData.name} -- ${t(
+                  `${index}/${total} ${t("buyFailed")} ${player._staticData.name} -- ${t(
                     "reattempting"
                   )} ${status == 461 ? `(${t("othersWon")})` : ""}`,
                   UINotificationType.NEGATIVE
@@ -564,7 +567,7 @@ const buyPlayer = (player, buyPrice) => {
             });
           } else {
             sendUINotification(
-              `${t("searchFailed")} ${player._staticData.name}`,
+              `${index}/${total} ${t("searchFailed")} ${player._staticData.name}`,
               UINotificationType.NEGATIVE
             );
           }
@@ -574,7 +577,7 @@ const buyPlayer = (player, buyPrice) => {
     }
     if (!buySuccess) {
       sendUINotification(
-        `${t("buyFailed")} ${player._staticData.name}`,
+        `${index}/${total} ${t("buyFailed")} ${player._staticData.name}`,
         UINotificationType.NEGATIVE
       );
     }

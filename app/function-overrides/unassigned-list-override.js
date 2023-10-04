@@ -5,15 +5,6 @@ export const unassignedListOverride = () => {
   UTUnassignedItemsView.prototype.renderSection = function(e, t, i, o, ...args) {
     const result = unassignedList.call(this, e, t, i, o, ...args);
     this.sections.forEach(element => {
-      appendCardPrice(
-        element.listRows.map(({ __root, __auction, data }) => ({
-          __root,
-          __auction,
-          data,
-        })),
-        "packs"
-      );
-
       appendSectionPrices({
         listRows: element.listRows.map(({ __root, __auction, data }) => ({
           __root,

@@ -6,7 +6,7 @@ import { listCards } from "../reListUtil";
 import { calculatePlayerMinBin } from "../../services/minBinCalc";
 import { t } from "../../services/translate";
 import { downloadClub } from "../../services/club";
-import { formatDataSource } from "../commonUtil";
+import { formatDataSource, showLoader, hideLoader } from "../commonUtil";
 import { showPopUp } from "../../function-overrides/popup-override";
 
 export const generateListForFutBinBtn = () => {
@@ -43,6 +43,8 @@ export const generateCalcMinBin = () => {
   return createButton(
     t("calcMinBin"),
     async function () {
+      showLoader();
+
       const selectedItem =
         getValue("selectedPlayer") || getValue("selectedNonPlayer");
       if (!selectedItem) {
@@ -78,6 +80,8 @@ export const generateCalcMinBin = () => {
           </ol>
         </span>`
       );
+
+      hideLoader();
     },
     "accordian"
   );
