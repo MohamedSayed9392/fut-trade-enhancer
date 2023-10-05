@@ -6,7 +6,7 @@ export const moveToTransferList = (items) => {
   const itemsToMove =
     repositories.Item.getPileSize(ItemPile.TRANSFER) -
     repositories.Item.numItemsInCache(ItemPile.TRANSFER);
-  items = items.slice(0, itemsToMove + 1);
+  items = items.slice(0, itemsToMove);
   if (items.length) {
     services.Item.move(items, ItemPile.TRANSFER).observe(
       this,

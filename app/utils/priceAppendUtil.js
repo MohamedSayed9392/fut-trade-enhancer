@@ -1,5 +1,6 @@
 import { fetchPrices } from "../services/datasource";
-import { getDataSource, getValue } from "../services/repository";
+import { getDataSource, getValue,getSelectedPlayersBySection } from "../services/repository";
+import { moveToClub } from "./clubMoveUtil";
 import { getPercentDiff } from "./commonUtil";
 import {
   moveCardsToClub,
@@ -152,14 +153,26 @@ export const appendSlotPrice = async (squadSlots) => {
 
 export const appendSectionPrices = async (sectionData) => {
   const dataSource = getDataSource();
+
+  const cards = [];
+  for (const { data } of sectionData.listRows) {
+    cards.push(data);
+  }
+  
   if (sectionData.listRows.length) {
     const isUnassigned =
-      "Unassigned" ===
-      sectionData.sectionHeader;
+    "Unassigned.Items" === sectionData.sectionHeader ||
+     "Unassigned.Dublicates" === sectionData.sectionHeader;
     if (isUnassigned) {
       sectionData.headerElement.append(
         generateSendToTransferList(
           () => showMoveToTransferListPopup(moveUnassignedToTransferList),
+          "relist"
+        ).__root
+      );
+      sectionData.headerElement.append(
+        generateSendToClub(
+          () => moveToClub(getSelectedItems(sectionData.sectionHeader,cards)),
           "relist"
         ).__root
       );
@@ -206,4 +219,22 @@ export const appendSectionPrices = async (sectionData) => {
       }
     );
   }
+};
+
+const getSelectedItems = (sectionHeader,items) => {
+  const selectedPlayersBySection =
+    getSelectedPlayersBySection(sectionHeader) || new Map();
+    const selectedKeys = [];
+  for (const [key, selected] of selectedPlayersBySection) {
+    selected && selectedKeys.push(key);
+  }
+
+  const result = items.filter((x) => {
+    if (selectedKeys.includes(x.id)) {
+      return true;
+    }
+    return false;
+  });
+
+  return result;
 };

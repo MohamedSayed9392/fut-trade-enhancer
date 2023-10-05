@@ -2,9 +2,9 @@ module.exports = {
   headers: {
     name: "FUT Trade Enhancer",
     namespace: "http://tampermonkey.net/",
-    version: "2.0.5",
+    version: "2.0.6",
     description: "FUT Trade Enhancer",
-    author: "CK Algos",
+    author: "Mohamed Sayed",
     match: [
       "https://www.ea.com/*/ea-sports-fc/ultimate-team/web-app/*",
       "https://www.ea.com/ea-sports-fc/ultimate-team/web-app/*",

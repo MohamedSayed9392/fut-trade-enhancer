@@ -7,6 +7,7 @@ export const unassignedListOverride = () => {
     
     var element = this.sections[t];
 
+    var sectionHeader = t == 0 ? "Unassigned.Items" : "Unassigned.Dublicates"
     appendSectionPrices({
       listRows: element.listRows.map(({ __root, __auction, data }) => ({
         __root,
@@ -15,7 +16,7 @@ export const unassignedListOverride = () => {
       })),
       headerElement: $(element._header.__root),
       isRelistSupported: true,
-      sectionHeader: "Unassigned",
+      sectionHeader: sectionHeader,
     });
 
     return result;
