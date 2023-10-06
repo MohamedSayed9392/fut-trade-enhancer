@@ -3,7 +3,7 @@ import { hideLoader, showLoader } from "./commonUtil";
 import { sendUINotification } from "./notificationUtil";
 import { moveToTransferList } from "./transferListUtil";
 
-export const moveUnassignedToTransferList = async () => {
+export const moveUnassignedToTransferList = async (items) => {
   if (repositories.Item.isPileFull(ItemPile.TRANSFER)) {
     return sendUINotification(
       t("transferListFull"),
@@ -11,7 +11,6 @@ export const moveUnassignedToTransferList = async () => {
     );
   }
   showLoader();
-  let items = await getUnassignedItems();
   if (items) {
     moveToTransferList(items);
   }

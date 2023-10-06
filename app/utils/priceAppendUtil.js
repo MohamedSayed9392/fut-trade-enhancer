@@ -166,8 +166,7 @@ export const appendSectionPrices = async (sectionData) => {
     if (isUnassigned) {
       sectionData.headerElement.append(
         generateSendToTransferList(
-          () => showMoveToTransferListPopup(moveUnassignedToTransferList),
-          "relist"
+          () => moveUnassignedToTransferList(getSelectedItems(sectionData.sectionHeader,cards))
         ).__root
       );
       sectionData.headerElement.append(
